@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5">
+  <title>Exam Portal · Student</title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ---------- GLOBAL STYLES ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 30px;
+      width: 100%;
+      max-width: 800px;
+      transition: all 0.3s;
+    }
+    h1, h2 {
+      font-weight: 600;
+      color: #fff;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      margin-bottom: 20px;
+    }
+    label {
+      color: #fff;
+      font-weight: 500;
+      display: block;
+      margin-bottom: 8px;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-family: inherit;
+      background: rgba(255,255,255,0.9);
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      transition: 0.2s;
+    }
+    input:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.5);
+    }
+    button {
+      background: linear-gradient(45deg, #ff6b6b, #feca57);
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
+    }
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .timer {
+      background: rgba(0,0,0,0.3);
+      padding: 12px 20px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+    }
+    .option {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 12px 20px;
+      margin: 10px 0;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .option.selected {
+      background: rgba(255,255,255,0.3);
+      border-color: white;
+      box-shadow: 0 0 15px rgba(255,255,255,0.5);
+    }
+    .nav-btn {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 12px 25px;
+      border-radius: 50px;
+      border: 1px solid white;
+      width: auto;
+      margin: 0 5px;
+    }
+    .result-item {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 15px;
+      margin: 10px 0;
+      color: white;
+    }
+    @media (max-width: 600px) {
+      .glass-card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card" id="app">
+    <!-- LANDING SECTION -->
+    <div id="landing">
+      <h1>📝 Welcome to Exam Portal</h1>
+      <label for="name">Your Name</label>
+      <input type="text" id="name" placeholder="e.g. John Doe" autocomplete="off">
+      <label for="testSelect" style="margin-top: 20px;">Select Test</label>
+      <select id="testSelect">
+        <option value="">-- Loading tests --</option>
+      </select>
+      <button id="startBtn">Start Exam</button>
+    </div>
+
+    <!-- EXAM SECTION (hidden initially) -->
+    <div id="exam" class="hidden">
+      <div class="flex-between">
+        <h2 id="questionHeader"></h2>
+        <div class="timer" id="timerDisplay">00:00</div>
+      </div>
+      <div id="questionContainer"></div>
+      <div class="flex-between" style="margin-top: 30px;">
+        <button id="prevBtn" class="nav-btn">← Previous</button>
+        <button id="nextBtn" class="nav-btn">Next →</button>
+      </div>
+      <button id="submitBtn" style="background: #ff6b6b; margin-top: 20px;">Submit Test</button>
+    </div>
+
+    <!-- RESULT SECTION (hidden) -->
+    <div id="result" class="hidden">
+      <h1>🎉 Your Result</h1>
+      <div id="resultDetails"></div>
+      <button onclick="location.reload()" style="background: #48dbfb;">Take New Test</button>
+    </div>
+  </div>
+
+  <script>
+    // ========== CONFIGURATION ==========
+    const API_URL = 'YOUR_APPS_SCRIPT_URL';   // <-- REPLACE WITH YOUR DEPLOYED URL
+
+    // ========== GLOBAL STATE ==========
+    let currentTest = '';
+    let studentName = '';
+    let questions = [];
+    let currentIndex = 0;
+    let answers = [];
+    let timerInterval = null;
+    let timeRemaining = 0; // seconds
+
+    // ========== DOM ELEMENTS ==========
+    const landing = document.getElementById('landing');
+    const exam = document.getElementById('exam');
+    const resultDiv = document.getElementById('result');
+    const testSelect = document.getElementById('testSelect');
+    const startBtn = document.getElementById('startBtn');
+    const questionContainer = document.getElementById('questionContainer');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const timerDisplay = document.getElementById('timerDisplay');
+    const questionHeader = document.getElementById('questionHeader');
+
+    // ========== INITIAL LOAD: FETCH TESTS ==========
+    window.onload = async () => {
+      try {
+        const res = await fetch(`${API_URL}?action=getTests`);
+        const json = await res.json();
+        if (json.success) {
+          const tests = json.data;
+          testSelect.innerHTML = '<option value="">-- Select a test --</option>';
+          tests.forEach(test => {
+            testSelect.innerHTML += `<option value="${test}">${test}</option>`;
+          });
+        } else {
+          alert('Error loading tests: ' + json.error);
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    };
+
+    // ========== START EXAM ==========
+    startBtn.addEventListener('click', async () => {
+      studentName = document.getElementById('name').value.trim();
+      currentTest = testSelect.value;
+      if (!studentName) return alert('Please enter your name');
+      if (!currentTest) return alert('Please select a test');
+
+      // Fetch questions for selected test
+      try {
+        const res = await fetch(`${API_URL}?action=getQuestions&test=${encodeURIComponent(currentTest)}`);
+        const json = await res.json();
+        if (json.success) {
+          questions = json.data;
+          if (questions.length === 0) return alert('No questions in this test');
+          
+          // Initialize answers array
+          answers = new Array(questions.length).fill(null);
+          currentIndex = 0;
+          
+          // Set timer: 60 sec per question
+          timeRemaining = questions.length * 60;
+          startTimer();
+          
+          // Switch view
+          landing.classList.add('hidden');
+          exam.classList.remove('hidden');
+          renderQuestion();
+        } else {
+          alert('Error: ' + json.error);
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    });
+
+    // ========== RENDER CURRENT QUESTION ==========
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      questionHeader.innerText = `Question ${currentIndex+1} of ${questions.length}`;
+      
+      let html = `<p style="color:white; margin-bottom:20px;">${q.question}</p>`;
+      const letters = ['A', 'B', 'C', 'D'];
+      q.options.forEach((opt, idx) => {
+        const isSelected = answers[currentIndex] === letters[idx];
+        html += `<div class="option ${isSelected ? 'selected' : ''}" data-index="${idx}">
+                  <span style="font-weight:600;">${letters[idx]}.</span> ${opt}
+                </div>`;
+      });
+      questionContainer.innerHTML = html;
+
+      // Attach click listeners to options
+      document.querySelectorAll('.option').forEach(opt => {
+        opt.addEventListener('click', function(e) {
+          // Remove selected from all options of this question
+          document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+          this.classList.add('selected');
+          // Store answer (A,B,C,D)
+          const letter = this.querySelector('span').innerText.replace('.','');
+          answers[currentIndex] = letter;
+        });
+      });
+
+      // Update navigation buttons
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === questions.length - 1;
+    }
+
+    // ========== NAVIGATION ==========
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    });
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < questions.length - 1) {
+        currentIndex++;
+        renderQuestion();
+      }
+    });
+
+    // ========== TIMER ==========
+    function startTimer() {
+      timerInterval = setInterval(() => {
+        timeRemaining--;
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          submitTest(); // auto-submit when time runs out
+        }
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerDisplay.innerText = `${minutes.toString().padStart(2,'0')}:${seconds.toString().padStart(2,'0')}`;
+      }, 1000);
+    }
+
+    // ========== SUBMIT TEST ==========
+    submitBtn.addEventListener('click', submitTest);
+    async function submitTest() {
+      clearInterval(timerInterval);
+      
+      // Calculate score
+      let correct = 0;
+      questions.forEach((q, i) => {
+        if (answers[i] && answers[i] === q.correct) correct++;
+      });
+      const total = questions.length;
+      const score = correct;
+      const percentage = ((score / total) * 100).toFixed(2);
+
+      // Send result to backend
+      const payload = {
+        name: studentName,
+        score: score,
+        total: total,
+        percentage: parseFloat(percentage)
+      };
+
+      try {
+        const res = await fetch(`${API_URL}?action=submitTest`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          // Show result
+          exam.classList.add('hidden');
+          resultDiv.classList.remove('hidden');
+          document.getElementById('resultDetails').innerHTML = `
+            <div class="result-item"><strong>Name:</strong> ${studentName}</div>
+            <div class="result-item"><strong>Total Questions:</strong> ${total}</div>
+            <div class="result-item"><strong>Correct:</strong> ${score}</div>
+            <div class="result-item"><strong>Wrong:</strong> ${total - score}</div>
+            <div class="result-item"><strong>Final Score:</strong> ${score} / ${total}</div>
+            <div class="result-item"><strong>Percentage:</strong> ${percentage}%</div>
+          `;
+        } else {
+          alert('Error submitting: ' + json.error);
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>
