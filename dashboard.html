@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard · Exam Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #141e30, #243b55);
+      min-height: 100vh;
+      padding: 30px 20px;
+      color: white;
+    }
+    .dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 { font-weight: 600; margin-bottom: 30px; }
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .tab-btn {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.3);
+      padding: 12px 28px;
+      border-radius: 50px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .tab-btn.active {
+      background: linear-gradient(45deg, #ff6b6b, #feca57);
+      border-color: transparent;
+    }
+    .section {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      display: none;
+    }
+    .section.active { display: block; }
+    h2 { margin-bottom: 25px; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.9);
+      margin-bottom: 15px;
+      font-size: 15px;
+    }
+    button {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+      margin-right: 10px;
+    }
+    button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,107,107,0.4); }
+    .logout-btn {
+      background: transparent;
+      border: 1px solid white;
+      float: right;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    th { background: rgba(0,0,0,0.3); font-weight: 600; }
+    .delete-btn {
+      background: #ff4757;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+    }
+    .message {
+      margin-top: 20px;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 500;
+    }
+    .success { background: rgba(0,255,0,0.2); border-left: 5px solid #00ff00; }
+    .error { background: rgba(255,0,0,0.2); border-left: 5px solid #ff0000; }
+    @media (max-width: 700px) {
+      .tabs { flex-direction: column; }
+      table { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <h1>📊 Admin Panel</h1>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab-btn active" data-tab="add">➕ Add Question</div>
+      <div class="tab-btn" data-tab="results">📋 View Results</div>
+      <div class="tab-btn" data-tab="delete">🗑️ Delete Questions</div>
+    </div>
+
+    <!-- Section: Add Question -->
+    <div id="add-section" class="section active">
+      <h2>Add New Question</h2>
+      <label>Test Name</label>
+      <input type="text" id="testName" placeholder="e.g. Mathematics">
+      <label>Question</label>
+      <textarea id="questionText" rows="3" placeholder="Enter question..."></textarea>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+        <div><label>Option A</label><input type="text" id="optA"></div>
+        <div><label>Option B</label><input type="text" id="optB"></div>
+        <div><label>Option C</label><input type="text" id="optC"></div>
+        <div><label>Option D</label><input type="text" id="optD"></div>
+      </div>
+      <label>Correct Option</label>
+      <select id="correctOpt">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+      </select>
+      <button id="saveQuestionBtn">Save Question</button>
+      <div id="addMessage" class="message"></div>
+    </div>
+
+    <!-- Section: View Results -->
+    <div id="results-section" class="section">
+      <h2>All Results</h2>
+      <div id="resultsTable"></div>
+    </div>
+
+    <!-- Section: Delete Questions -->
+    <div id="delete-section" class="section">
+      <h2>Delete Questions</h2>
+      <label>Select Test</label>
+      <select id="deleteTestSelect">
+        <option value="">-- Choose test --</option>
+      </select>
+      <div id="questionsList" style="margin-top:25px;"></div>
+      <div id="deleteMessage" class="message"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'YOUR_APPS_SCRIPT_URL';   // <-- REPLACE WITH YOUR DEPLOYED URL
+
+    // ---------- SESSION CHECK ----------
+    (function checkAuth() {
+      const user = localStorage.getItem('adminUser');
+      const pass = localStorage.getItem('adminPass');
+      if (!user || !pass) {
+        window.location.href = 'admin-login.html';
+      }
+    })();
+
+    // ---------- LOGOUT ----------
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('adminUser');
+      localStorage.removeItem('adminPass');
+      window.location.href = 'admin-login.html';
+    });
+
+    // ---------- TAB SWITCHING ----------
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const sections = {
+      add: document.getElementById('add-section'),
+      results: document.getElementById('results-section'),
+      delete: document.getElementById('delete-section')
+    };
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        Object.keys(sections).forEach(key => sections[key].classList.remove('active'));
+        sections[btn.dataset.tab].classList.add('active');
+        if (btn.dataset.tab === 'results') loadResults();
+        if (btn.dataset.tab === 'delete') loadTestsForDelete();
+      });
+    });
+
+    // ---------- ADD QUESTION ----------
+    document.getElementById('saveQuestionBtn').addEventListener('click', async () => {
+      const test = document.getElementById('testName').value.trim();
+      const question = document.getElementById('questionText').value.trim();
+      const optA = document.getElementById('optA').value.trim();
+      const optB = document.getElementById('optB').value.trim();
+      const optC = document.getElementById('optC').value.trim();
+      const optD = document.getElementById('optD').value.trim();
+      const correct = document.getElementById('correctOpt').value;
+
+      if (!test || !question || !optA || !optB || !optC || !optD) {
+        return showMessage('addMessage', 'All fields are required', 'error');
+      }
+
+      const payload = {
+        action: 'addQuestion',
+        test,
+        question,
+        optionA: optA,
+        optionB: optB,
+        optionC: optC,
+        optionD: optD,
+        correctOption: correct,
+        adminUser: localStorage.getItem('adminUser'),
+        adminPass: localStorage.getItem('adminPass')
+      };
+
+      try {
+        const res = await fetch(`${API_URL}?action=addQuestion`, {
+          method: 'POST',
+          body: JSON.stringify(payload),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          showMessage('addMessage', 'Question added successfully!', 'success');
+          // Clear form
+          document.getElementById('testName').value = '';
+          document.getElementById('questionText').value = '';
+          document.getElementById('optA').value = '';
+          document.getElementById('optB').value = '';
+          document.getElementById('optC').value = '';
+          document.getElementById('optD').value = '';
+        } else {
+          showMessage('addMessage', json.error, 'error');
+        }
+      } catch (err) {
+        showMessage('addMessage', 'Network error: ' + err.message, 'error');
+      }
+    });
+
+    // ---------- VIEW RESULTS ----------
+    async function loadResults() {
+      const container = document.getElementById('resultsTable');
+      container.innerHTML = 'Loading...';
+      try {
+        const res = await fetch(`${API_URL}?action=getResults`, {
+          method: 'POST',
+          body: JSON.stringify({
+            adminUser: localStorage.getItem('adminUser'),
+            adminPass: localStorage.getItem('adminPass')
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          const results = json.data;
+          if (results.length === 0) {
+            container.innerHTML = '<p style="color:white;">No results yet.</p>';
+            return;
+          }
+          let html = `<table>
+            <tr><th>Name</th><th>Score</th><th>Total</th><th>%</th><th>Date</th></tr>`;
+          results.forEach(r => {
+            html += `<tr>
+              <td>${r.name}</td>
+              <td>${r.score}</td>
+              <td>${r.total}</td>
+              <td>${r.percentage}%</td>
+              <td>${new Date(r.date).toLocaleString()}</td>
+            </tr>`;
+          });
+          html += '</table>';
+          container.innerHTML = html;
+        } else {
+          container.innerHTML = `<p style="color:#ff9999;">Error: ${json.error}</p>`;
+        }
+      } catch (err) {
+        container.innerHTML = `<p style="color:#ff9999;">Network error: ${err.message}</p>`;
+      }
+    }
+
+    // ---------- DELETE QUESTIONS ----------
+    async function loadTestsForDelete() {
+      const select = document.getElementById('deleteTestSelect');
+      select.innerHTML = '<option value="">-- Loading tests --</option>';
+      try {
+        const res = await fetch(`${API_URL}?action=getTests`);
+        const json = await res.json();
+        if (json.success) {
+          select.innerHTML = '<option value="">-- Choose test --</option>';
+          json.data.forEach(test => {
+            select.innerHTML += `<option value="${test}">${test}</option>`;
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    document.getElementById('deleteTestSelect').addEventListener('change', async function() {
+      const test = this.value;
+      if (!test) return;
+      const listDiv = document.getElementById('questionsList');
+      listDiv.innerHTML = 'Loading questions...';
+      try {
+        const res = await fetch(`${API_URL}?action=getQuestions&test=${encodeURIComponent(test)}`);
+        const json = await res.json();
+        if (json.success) {
+          const qs = json.data;
+          if (qs.length === 0) {
+            listDiv.innerHTML = '<p style="color:white;">No questions in this test.</p>';
+            return;
+          }
+          let html = '';
+          qs.forEach(q => {
+            html += `<div style="background:rgba(255,255,255,0.1); padding:15px; border-radius:12px; margin-bottom:10px;">
+              <p><strong>Q${q.id}:</strong> ${q.question}</p>
+              <button class="delete-btn" data-id="${q.id}">Delete</button>
+            </div>`;
+          });
+          listDiv.innerHTML = html;
+          // Attach delete handlers
+          document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', deleteQuestionHandler);
+          });
+        }
+      } catch (err) {
+        listDiv.innerHTML = `<p style="color:#ff9999;">Error: ${err.message}</p>`;
+      }
+    });
+
+    async function deleteQuestionHandler(e) {
+      const id = e.target.dataset.id;
+      if (!confirm('Delete this question permanently?')) return;
+      try {
+        const res = await fetch(`${API_URL}?action=deleteQuestion`, {
+          method: 'POST',
+          body: JSON.stringify({
+            id: id,
+            adminUser: localStorage.getItem('adminUser'),
+            adminPass: localStorage.getItem('adminPass')
+          }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          showMessage('deleteMessage', 'Question deleted', 'success');
+          // Refresh list
+          document.getElementById('deleteTestSelect').dispatchEvent(new Event('change'));
+        } else {
+          showMessage('deleteMessage', json.error, 'error');
+        }
+      } catch (err) {
+        showMessage('deleteMessage', 'Network error: ' + err.message, 'error');
+      }
+    }
+
+    // ---------- HELPER ----------
+    function showMessage(elementId, text, type) {
+      const el = document.getElementById(elementId);
+      el.innerText = text;
+      el.className = `message ${type}`;
+      setTimeout(() => { el.innerText = ''; el.className = 'message'; }, 4000);
+    }
+  </script>
+</body>
+</html>
