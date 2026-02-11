@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login · Exam Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #1e1e2f, #2a2a40);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      color: white;
+    }
+    h1 { font-weight: 600; margin-bottom: 30px; text-align: center; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; }
+    input {
+      width: 100%;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.9);
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+    button {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover { transform: scale(1.02); box-shadow: 0 5px 15px rgba(255,107,107,0.4); }
+    #message {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="glass-card">
+    <h1>🔐 Admin Login</h1>
+    <label>Username</label>
+    <input type="text" id="username" placeholder="admin" autocomplete="off">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <button id="loginBtn">Login</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    const API_URL = 'YOUR_APPS_SCRIPT_URL';   // <-- REPLACE WITH YOUR DEPLOYED URL
+
+    document.getElementById('loginBtn').addEventListener('click', async () => {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const msg = document.getElementById('message');
+
+      if (!username || !password) {
+        msg.style.color = '#ff9999';
+        msg.innerText = 'Please fill both fields.';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_URL}?action=adminLogin`, {
+          method: 'POST',
+          body: JSON.stringify({ username, password }),
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          // Store admin session in localStorage
+          localStorage.setItem('adminUser', username);
+          localStorage.setItem('adminPass', password);
+          msg.style.color = '#aaffaa';
+          msg.innerText = 'Login successful! Redirecting...';
+          setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
+        } else {
+          msg.style.color = '#ff9999';
+          msg.innerText = 'Invalid credentials.';
+        }
+      } catch (err) {
+        msg.style.color = '#ff9999';
+        msg.innerText = 'Network error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
