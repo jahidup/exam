@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Help – Test Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background: #f4f7fc;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .admin-glass {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.5);
+      box-shadow: 0 20px 40px -12px rgba(0,0,0,0.08);
+    }
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1rem;
+    }
+    .neon-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+      animation: neon-flicker 1.5s infinite alternate;
+    }
+    @keyframes neon-flicker {
+      0% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff; }
+      50% { opacity: 0.8; text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff; }
+      100% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff; }
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #1e3a8a;
+      border-left: 4px solid #3b82f6;
+      padding-left: 0.75rem;
+    }
+    .step-list {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .step-list li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="max-w-4xl mx-auto admin-glass rounded-3xl p-8">
+    <h1 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+      🛠️ Admin Help Guide
+    </h1>
+    
+    <p class="text-lg mb-6 text-gray-700">
+      Welcome to the Admin Panel! This guide explains all the features available to you as an administrator.  
+      Use it to manage students, tests, questions, results, discussions, messages, and more.
+    </p>
+
+    <!-- 1. Admin Login -->
+    <div class="section-title">🔐 1. Admin Login</div>
+    <p>To access the admin panel, enter the admin password on the login screen.</p>
+    <ul class="step-list">
+      <li><strong>Default password:</strong> <code>jahid</code> (you should change it immediately in Settings).</li>
+      <li>After successful login, you will see the admin dashboard with tabs for different sections.</li>
+    </ul>
+
+    <!-- 2. Dashboard -->
+    <div class="section-title">📊 2. Dashboard</div>
+    <p>The dashboard gives you a quick overview:</p>
+    <ul class="step-list">
+      <li><strong>Total Students, Tests, Questions</strong> – counts of each.</li>
+      <li><strong>Recent Toppers</strong> – top 3 rankers of the first test (by default).</li>
+      <li>All numbers are clickable (they just show stats, not links).</li>
+    </ul>
+
+    <!-- 3. Students Tab -->
+    <div class="section-title">👥 3. Students Management</div>
+    <p>Here you can view, add, search, block, and unblock students.</p>
+    <ul class="step-list">
+      <li><strong>Search:</strong> Type in the search box to filter by ID or name in real time.</li>
+      <li><strong>Add Student:</strong> Click the <i class="fas fa-plus"></i> Add Student button. Fill in:
+        <ul class="list-circle pl-6">
+          <li><strong>Student ID</strong> – unique identifier (e.g., 2024CS001).</li>
+          <li><strong>Full Name</strong> – student's name.</li>
+          <li><strong>DOB</strong> – exactly 8 digits (DDMMYYYY).</li>
+          <li><strong>Class, Mobile, Email</strong> – optional but recommended (email is used for result notifications).</li>
+        </ul>
+      </li>
+      <li><strong>Student Table:</strong> Shows ID, name, DOB, class, mobile, email, registration date, status (Active/Blocked), and action buttons.</li>
+      <li><strong>Block/Unblock:</strong> Click the red "Block" button to open a modal where you can enter a reason. The student will then be blocked from logging in and sending messages. To unblock, click the green "Unblock" button next to a blocked student.</li>
+      <li><strong>Refresh:</strong> Click the refresh icon <i class="fas fa-sync-alt text-blue-600"></i> next to the section title to reload the student list.</li>
+    </ul>
+
+    <!-- 4. Tests Tab -->
+    <div class="section-title">📝 4. Tests Management</div>
+    <p>Create, view, and delete tests.</p>
+    <ul class="step-list">
+      <li><strong>Search:</strong> Filter tests by ID or name.</li>
+      <li><strong>Create Test:</strong> Click <i class="fas fa-plus"></i> Create Test. Fill in:
+        <ul class="list-circle pl-6">
+          <li><strong>Test ID</strong> – unique (e.g., T001).</li>
+          <li><strong>Test Name</strong> – display name.</li>
+          <li><strong>Duration</strong> – in minutes.</li>
+          <li><strong>Marks</strong> – default correct, wrong, and skip marks (can be overridden per question).</li>
+          <li><strong>Shuffle questions</strong> – if checked, questions will be presented in random order to each student.</li>
+        </ul>
+      </li>
+      <li><strong>Test Table:</strong> Lists test ID, name, duration, shuffle status, marks scheme, and a delete button (<i class="fas fa-trash text-red-600"></i>).</li>
+      <li><strong>Delete Test:</strong> Click the trash icon – a confirmation will appear. Deleting a test also removes all associated questions, responses, results, and discussions.</li>
+      <li><strong>Refresh:</strong> Use the refresh icon to reload the list.</li>
+    </ul>
+
+    <!-- 5. Questions Tab -->
+    <div class="section-title">❓ 5. Questions Management</div>
+    <p>Add, edit, delete questions for a specific test.</p>
+    <ul class="step-list">
+      <li><strong>Select Test:</strong> First choose a test from the dropdown, then click <strong>Load Questions</strong>.</li>
+      <li><strong>Search within questions:</strong> Filter by question ID or text.</li>
+      <li><strong>Add Question:</strong> Click <i class="fas fa-plus"></i> Add Question. Fill in:
+        <ul class="list-circle pl-6">
+          <li><strong>Question ID</strong> – unique within the test (e.g., Q001).</li>
+          <li><strong>Type</strong> – MCQ or Numerical.</li>
+          <li><strong>Question Text</strong> – in English and Hindi (Hindi optional).</li>
+          <li><strong>Options (for MCQ)</strong> – English and Hindi text for each of the four options.</li>
+          <li><strong>Correct Answer</strong> – for MCQ, the option number (1,2,3,4); for numerical, the exact value.</li>
+          <li><strong>Tolerance</strong> – for numerical questions, allowed error (e.g., 0.01).</li>
+          <li><strong>Custom Marks</strong> – leave blank to use test default, or enter specific marks for correct, wrong, and skip.</li>
+          <li><strong>Image URL</strong> – optional; you can provide one or more URLs separated by semicolons to display images with the question.</li>
+        </ul>
+      </li>
+      <li><strong>Edit Question:</strong> Click the edit icon (<i class="fas fa-edit text-indigo-600"></i>) next to a question. The same form opens pre‑filled.</li>
+      <li><strong>Delete Question:</strong> Click the trash icon (<i class="fas fa-trash text-red-600"></i>) – confirmation required.</li>
+      <li>After adding/editing/deleting, the list refreshes automatically.</li>
+    </ul>
+
+    <!-- 6. Results Tab -->
+    <div class="section-title">🏆 6. Results & Analysis</div>
+    <p>View all test results, filter by test, and see detailed analysis per student.</p>
+    <ul class="step-list">
+      <li><strong>Filter by Test:</strong> Choose a test from the dropdown or leave "All Tests" to see everything.</li>
+      <li><strong>Load Results:</strong> Click the <strong>Load Results</strong> button to fetch data.</li>
+      <li><strong>Search:</strong> Type in the search box to filter the table by student name or test name.</li>
+      <li><strong>Results Table:</strong> Shows student name (with ID), test name, score, rank, submission date/time, and a <strong>View Analysis</strong> button.</li>
+      <li><strong>View Analysis:</strong> Opens a modal with a detailed breakdown of every question:
+        <ul class="list-circle pl-6">
+          <li>Question text, student's answer, correct answer, marks awarded, and whether it was correct.</li>
+          <li>If the question has an image, it is displayed.</li>
+          <li>This is the same view that students see in their analysis.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <!-- 7. Discussions Tab -->
+    <div class="section-title">💬 7. Discussions</div>
+    <p>Create and delete discussion posts for tests. Students can view these posts.</p>
+    <ul class="step-list">
+      <li><strong>Select Test:</strong> Choose a test from the dropdown.</li>
+      <li><strong>New Post:</strong> Click <strong>+ New Post</strong>. Fill in:
+        <ul class="list-circle pl-6">
+          <li><strong>Title</strong> – short headline.</li>
+          <li><strong>Description</strong> – detailed text.</li>
+          <li><strong>Link</strong> – optional URL (e.g., to a YouTube video or document).</li>
+        </ul>
+      </li>
+      <li><strong>Delete Post:</strong> Each post has a Delete button – click to remove it after confirmation.</li>
+      <li><strong>Refresh:</strong> Use the refresh icon to reload discussions for the selected test.</li>
+    </ul>
+
+    <!-- 8. Messages Tab -->
+    <div class="section-title">✉️ 8. Messages</div>
+    <p>View all messages from students, including unblock requests, and reply to them.</p>
+    <ul class="step-list">
+      <li><strong>Message Threads:</strong> All messages are shown in chronological order. Student messages appear in blue, admin replies in gray. Each message shows the sender (student ID if from student) and timestamp.</li>
+      <li><strong>Unblock Requests:</strong> These are flagged with "🚫 Unblock Request". Next to such a message, an <strong>Unblock</strong> button appears – click to unblock that student directly.</li>
+      <li><strong>Reply:</strong> For any student message (not unblock requests), a <strong>Reply</strong> button appears. Click it, then type your reply in the text box below and click <strong>Send Reply</strong>. The student will see your reply in their Messages tab.</li>
+      <li><strong>Refresh:</strong> Use the refresh icon to load the latest messages.</li>
+    </ul>
+
+    <!-- 9. Blocked Tab -->
+    <div class="section-title">🚫 9. Blocked Students</div>
+    <p>See a list of currently blocked students and unblock them if needed.</p>
+    <ul class="step-list">
+      <li><strong>Table:</strong> Shows student ID, reason for blocking, and date/time blocked.</li>
+      <li><strong>Unblock:</strong> Click the green <strong>Unblock</strong> button next to a student – they will be immediately allowed to log in again.</li>
+      <li><strong>Refresh:</strong> Use the refresh icon to update the list.</li>
+    </ul>
+
+    <!-- 10. Settings Tab -->
+    <div class="section-title">⚙️ 10. Settings</div>
+    <p>Change the admin password.</p>
+    <ul class="step-list">
+      <li>Enter a new password in the field and click <strong>Update Password</strong>. A confirmation toast will appear on success.</li>
+      <li><strong>Important:</strong> Remember the new password – if you forget, you will need to manually reset it in the Google Sheet (Config sheet).</li>
+    </ul>
+
+    <!-- 11. Refresh Buttons -->
+    <div class="section-title">🔄 11. Refresh Buttons</div>
+    <p>Every section (except Settings) has a small refresh icon (<i class="fas fa-sync-alt text-blue-600"></i>) next to its title. Click it to reload the latest data without switching tabs. This is useful after making changes elsewhere or when data might have been updated by another admin.</p>
+
+    <!-- 12. Logout -->
+    <div class="section-title">🚪 12. Logout</div>
+    <p>Click the <strong>Logout</strong> button at the top right. A confirmation dialog will appear – after confirming, you are returned to the admin login screen.</p>
+
+    <!-- 13. Email Notifications -->
+    <div class="section-title">📧 13. Email Notifications</div>
+    <p>When a student submits a test, an email is automatically sent to the email address stored in their profile (if provided). The email contains the test name, the student's score, and their rank. Make sure student email addresses are correct.</p>
+
+    <hr class="my-8 border-gray-300">
+
+    <p class="text-center text-gray-600">
+      For any technical issues, contact your system developer.
+    </p>
+
+    <div class="text-center mt-8">
+      <a href="admin.html" class="bg-indigo-600 text-white px-6 py-2 rounded-full hover:bg-indigo-700 transition">
+        ← Back to Admin Panel
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer with brand -->
+  <div class="footer">
+    <a href="https://nexgenaitech.online" target="_blank" class="neon-link">
+      Powered By NexGenAiTech
+    </a>
+  </div>
+</body>
+</html>
