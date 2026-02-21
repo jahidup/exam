@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Help – Test Portal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      background: linear-gradient(145deg, #f0f4ff 0%, #e6edfa 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+    .glass-card {
+      background: rgba(255,255,255,0.7);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 20px 35px -10px rgba(0,0,0,0.1);
+    }
+    .footer {
+      margin-top: auto;
+      text-align: center;
+      padding: 1rem;
+    }
+    .neon-link {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff;
+      animation: neon-flicker 1.5s infinite alternate;
+    }
+    @keyframes neon-flicker {
+      0% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff; }
+      50% { opacity: 0.8; text-shadow: 0 0 2px #00ffff, 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff; }
+      100% { opacity: 1; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 40px #00ffff; }
+    }
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      margin-bottom: 0.5rem;
+      color: #1e3a8a;
+      border-left: 4px solid #3b82f6;
+      padding-left: 0.75rem;
+    }
+    .step-list {
+      list-style-type: disc;
+      padding-left: 1.5rem;
+      margin-top: 0.25rem;
+      margin-bottom: 0.5rem;
+    }
+    .step-list li {
+      margin-bottom: 0.25rem;
+    }
+  </style>
+</head>
+<body class="p-6">
+  <div class="max-w-4xl mx-auto glass-card rounded-3xl p-8">
+    <h1 class="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-indigo-700 bg-clip-text text-transparent">
+      🎓 Student Help Guide
+    </h1>
+    
+    <p class="text-lg mb-6 text-gray-700">
+      Welcome to the Test Portal! This guide explains everything you need to know as a student.  
+      If you have any further questions, please contact your teacher or admin.
+    </p>
+
+    <!-- 1. Login -->
+    <div class="section-title">🔐 1. Login</div>
+    <p>To enter the portal, you need your <strong>Student ID</strong> and <strong>Date of Birth (DOB)</strong>.</p>
+    <ul class="step-list">
+      <li><strong>Student ID:</strong> Provided by your school (e.g., <code>2024CS001</code>).</li>
+      <li><strong>DOB:</strong> Enter exactly 8 digits in <code>DDMMYYYY</code> format (e.g., <code>01012005</code> for 1st January 2005).</li>
+      <li>If your account is <strong>blocked</strong> by admin, you will see a message with the reason. You can send an unblock request directly from the pop‑up – the admin will review and may unblock you.</li>
+      <li>After successful login, you will see your dashboard.</li>
+    </ul>
+
+    <!-- 2. Dashboard & Profile -->
+    <div class="section-title">📊 2. Dashboard & Profile</div>
+    <p>Once logged in, the top card shows your:</p>
+    <ul class="step-list">
+      <li><strong>Name, ID, DOB</strong> – for your reference.</li>
+      <li><strong>Tests Taken</strong> – number of tests you have already submitted.</li>
+      <li><strong>Average Score</strong> – average marks across all tests you've taken.</li>
+      <li>Click the <i class="fas fa-info-circle text-gray-400"></i> icon next to average score to learn how rank works.</li>
+      <li>The <strong>Logout</strong> button (top right) will ask for confirmation before logging you out.</li>
+    </ul>
+
+    <!-- 3. Tabs -->
+    <div class="section-title">📂 3. Tabs (Navigation)</div>
+    <p>Below your profile, you have four tabs:</p>
+    <ul class="step-list">
+      <li><strong>Available Tests</strong> – Tests you haven't attempted yet.</li>
+      <li><strong>Previous Results</strong> – Your past test results with analysis.</li>
+      <li><strong>Discussions</strong> – Posts by admin for each test.</li>
+      <li><strong>Messages</strong> – Chat with the admin (one‑on‑one).</li>
+    </ul>
+    <p>Each tab has a refresh button (<i class="fas fa-sync-alt text-blue-600"></i>) to reload the latest data manually.</p>
+
+    <!-- 4. Available Tests & Taking a Test -->
+    <div class="section-title">📝 4. Available Tests & Taking a Test</div>
+    <p>In the <strong>Available Tests</strong> tab, you see a list of tests you can start. Each card shows:</p>
+    <ul class="step-list">
+      <li>Test name, duration (minutes), and marking scheme (e.g., +1 / -0 / 0).</li>
+      <li>Click <strong>Start Test</strong> to begin. The test page opens in a new tab (or same window).</li>
+    </ul>
+    <p><strong>Inside the test:</strong></p>
+    <ul class="step-list">
+      <li><strong>Timer</strong> – Counts down. When time reaches zero, the test is automatically submitted.</li>
+      <li><strong>Language Toggle</strong> – Switch between English and Hindi for questions and options.</li>
+      <li><strong>Question Navigator</strong> – Shows all question numbers with colours:
+        <ul class="list-circle pl-6">
+          <li><span class="inline-block w-3 h-3 bg-green-500 rounded-full"></span> Answered</li>
+          <li><span class="inline-block w-3 h-3 bg-red-400 rounded-full"></span> Not answered</li>
+          <li><span class="inline-block w-3 h-3 bg-purple-500 rounded-full"></span> Flagged (for review)</li>
+          <li>Click any number to jump directly to that question.</li>
+        </ul>
+      </li>
+      <li><strong>MCQ questions:</strong> Click on the option you want to select. It will be saved automatically.</li>
+      <li><strong>Numerical questions:</strong> Type your answer in the input box. It is saved automatically a short time after you stop typing (auto‑save).</li>
+      <li><strong>Flag button</strong> – Marks the current question as flagged (useful for review).</li>
+      <li><strong>Clear button</strong> – Removes your answer for the current question.</li>
+      <li><strong>Previous / Next</strong> – Move between questions. On the last question, the button changes to <strong>Submit</strong>.</li>
+      <li>You can also submit the test early by clicking the Submit button (confirmation will appear).</li>
+    </ul>
+    <p>After submission, you will see your score and rank in a pop‑up. Click <strong>Close</strong> to return to the dashboard.</p>
+
+    <!-- 5. Results & Analysis -->
+    <div class="section-title">📈 5. Results & Analysis</div>
+    <p>In the <strong>Previous Results</strong> tab, you see a table with:</p>
+    <ul class="step-list">
+      <li>Test name, your score, your rank, submission date.</li>
+      <li><strong>View Analysis</strong> button – Opens a detailed view of every question:
+        <ul class="list-circle pl-6">
+          <li>Question text, your answer, correct answer, marks awarded, and whether you were correct.</li>
+          <li>If the question has an image, it is shown.</li>
+          <li>At the top, you also see the <strong>Top 3 rankers</strong> of that test (names and scores).</li>
+        </ul>
+      </li>
+      <li><strong>View Toppers</strong> button – Opens a modal listing <strong>all students</strong> who took that test, ranked by score. You can see everyone's rank, name, and score.</li>
+    </ul>
+    <p><strong>Note:</strong> Your rank may change over time if other students score higher after you submitted.</p>
+
+    <!-- 6. Discussions -->
+    <div class="section-title">💬 6. Discussions</div>
+    <p>In the <strong>Discussions</strong> tab:</p>
+    <ul class="step-list">
+      <li>First, select a test from the dropdown, then click <strong>Load</strong>.</li>
+      <li>Any posts added by the admin for that test will appear. Each post may contain a title, description, and a clickable link.</li>
+      <li>Posts are read‑only – you cannot add new discussions (only admin can).</li>
+    </ul>
+
+    <!-- 7. Messages -->
+    <div class="section-title">✉️ 7. Messages</div>
+    <p>In the <strong>Messages</strong> tab, you can chat privately with the admin.</p>
+    <ul class="step-list">
+      <li>All previous messages (sent by you and replies from admin) appear in a chat‑like format.</li>
+      <li>To send a new message, type in the text box and click <strong>Send</strong>. A loading spinner appears while sending.</li>
+      <li><strong>If you are blocked:</strong> You will see a warning in red, and the send button will be disabled. You cannot send messages while blocked.</li>
+      <li>Messages are one‑to‑one – admin sees your student ID and can reply.</li>
+    </ul>
+
+    <!-- 8. Blocked Account & Unblock Request -->
+    <div class="section-title">🚫 8. Blocked Account & Unblock Request</div>
+    <p>If an admin blocks your account, you will not be able to log in normally. Instead, a pop‑up will appear with the reason. You have two options:</p>
+    <ul class="step-list">
+      <li><strong>Request Unblock</strong> – Type a reason (optional) and send. This creates a message to the admin, who can then unblock you.</li>
+      <li><strong>Close</strong> – Dismiss the pop‑up. You will remain on the login screen.</li>
+    </ul>
+    <p>Once unblocked by admin, you can log in again normally.</p>
+
+    <!-- 9. Email Notifications -->
+    <div class="section-title">📧 9. Email Notifications</div>
+    <p>If your student profile includes an <strong>email address</strong> (added by admin), you will receive an email after submitting a test. The email contains:</p>
+    <ul class="step-list">
+      <li>Test name, your score, and your rank.</li>
+      <li>A thank‑you message.</li>
+    </ul>
+    <p>Make sure your email is correct – ask admin to update it if needed.</p>
+
+    <!-- 10. Refresh Buttons -->
+    <div class="section-title">🔄 10. Refresh Buttons</div>
+    <p>Every tab has a small refresh icon (<i class="fas fa-sync-alt text-blue-600"></i>) next to its heading. Click it to reload the latest data without switching tabs. This is useful if you think the data might have changed (e.g., new test added, new message).</p>
+
+    <!-- 11. Logout Confirmation -->
+    <div class="section-title">🚪 11. Logout Confirmation</div>
+    <p>When you click the <strong>Logout</strong> button, a confirmation dialog appears. This prevents accidental logout. After confirming, you are returned to the login screen.</p>
+
+    <hr class="my-8 border-gray-300">
+
+    <p class="text-center text-gray-600">
+      Still need help? Contact your teacher or system administrator.
+    </p>
+
+    <div class="text-center mt-8">
+      <a href="index.html" class="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition">
+        ← Back to Student Portal
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer with brand -->
+  <div class="footer">
+    <a href="https://nexgenaitech.online" target="_blank" class="neon-link">
+      Powered By NexGenAiTech
+    </a>
+  </div>
+</body>
+</html>
